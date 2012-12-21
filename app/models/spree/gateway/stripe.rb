@@ -1,9 +1,8 @@
 module Spree
   class Gateway::Stripe < Gateway
     preference :login, :string
-    preference :currency, :string, :default => 'USD'        #stripes only supports USD and CAD
 
-    attr_accessible :preferred_login, :preferred_currency
+    attr_accessible :preferred_login
 
     # Make sure to have Spree::Config[:auto_capture] set to true.
 
@@ -18,7 +17,7 @@ module Spree
     def purchase(money, creditcard, gateway_options)
       options = {}
       options[:description] = "Spree Order ID: #{gateway_options[:order_id]}"
-      options[:currency] = preferred_currency
+      options[:currency] = gateway_options[:currency]
       if customer = creditcard.gateway_customer_profile_id
         options[:customer] = customer
         creditcard = nil
